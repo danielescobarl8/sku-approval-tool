@@ -28,21 +28,31 @@ if st.session_state.logged_in:
     action = st.toggle("Approve/Activate SKUs", value=True)
     action_text = "Activate" if action else "Deactivate"
     approval_status = "approved" if action else "unapproved"
-    theme_mode = "light" if action else "dark"
     
-    # Apply theme dynamically
-    st.markdown(
-        f"""
-        <style>
-        html, body, [class*="st-"] {{
-            background-color: {'#FFFFFF' if action else '#000000'};
-            color: {'#000000' if action else '#FFFFFF'};
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
+    # Apply theme dynamically and ensure switch visibility
+    if action:
+        st.markdown(
+            """
+            <style>
+            body { background-color: white; color: black; }
+            .stApp { background-color: white; color: black; }
+            div[data-testid="stToggle"] { filter: invert(0%); }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.markdown(
+            """
+            <style>
+            body { background-color: black; color: white; }
+            .stApp { background-color: black; color: white; }
+            div[data-testid="stToggle"] { filter: invert(100%); }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+    
     # Update switch title dynamically
     st.title("Approve/Activate SKUs" if action else "Unapprove/Deactivate SKUs")
 
