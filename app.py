@@ -35,19 +35,19 @@ if st.session_state.logged_in:
         "🌎 One step closer to a better catalog. Hold on!"
     ]
 
-    # Streamlit UI
-    st.title("Product Management")
-
     # Approval/Inactivation switch
     action = st.toggle("Approve/Activate SKUs", value=True)
-    action_text = "activate" if action else "inactivate"
+    action_text = "Activate" if action else "Deactivate"
     approval_status = "approved" if action else "unapproved"
+
+    # Update switch title dynamically
+    st.title("Approve/Activate SKUs" if action else "Unapprove/Deactivate SKUs")
 
     # Description text
     st.markdown(
-        f"This tool will help you turn **{action_text}** the SKUs you input here on s.com. "
+        f"This tool will help you {action_text.lower()} the SKUs you input here on s.com. "
         "It will not only affect those specific SKUs but the full run of SKUs under the same Color ID to ensure consistency in the catalog. "
-        "(For example, if you want to {action_text} a bike size 52, the other sizes will be affected as well)."
+        f"(For example, if you want to {action_text.lower()} a bike size 52, the other sizes will be affected as well)."
     )
 
     # Dropdown for country selection
@@ -60,7 +60,7 @@ if st.session_state.logged_in:
     uploaded_file = st.file_uploader("Choose a CSV or TXT file", type=["csv", "txt"])
 
     # Text area for PIDs
-    st.subheader(f"Enter the SKUs you want to {action_text} (comma-separated OR line-separated)")
+    st.subheader(f"Enter the SKUs you want to {action_text.lower()} (comma-separated OR line-separated)")
     pids_input = st.text_area("Paste SKUs here", placeholder="91825-3304\n98122-3105\n95223-7104")
 
     # Function to process both comma-separated and line-separated SKUs
@@ -126,9 +126,8 @@ if st.session_state.logged_in:
                     df_final.to_csv(output, sep="|", index=False)
                     st.session_state.approval_file_content = output.getvalue()  # Store file for multiple downloads
 
-                    # Generate timestamp for filename
-                    timestamp = datetime.now().strftime("%d%m%Y%H%M")
-                    st.session_state.approval_file_name = f"SBC_HYBRIS_SIZEVARIANT_{approval_status.upper()}_{timestamp}.txt"
+                    # Set static filename
+                    st.session_state.approval_file_name = "SBC_HYBRIS_SIZEVARIANT_APPROVAL.txt"
 
                     # Success message
                     st.success("✅ File successfully generated! Download it below.")
