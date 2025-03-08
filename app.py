@@ -24,21 +24,29 @@ if not st.session_state.logged_in:
 
 # If logged in, show the main app
 if st.session_state.logged_in:
-    # Motivational messages
-    motivational_phrases = [
-        "🚀 Great things are coming! Hang tight...",
-        "🔥 You're making big moves! Just a moment...",
-        "💡 Smart choice! Processing your request...",
-        "⏳ Almost there! Preparing your file...",
-        "✨ Good things take time... but not too long!",
-        "✅ Ensuring your catalog consistency!",
-        "🌎 One step closer to a better catalog. Hold on!"
-    ]
-
-    # Approval/Inactivation switch
+    # Apply theme based on action
     action = st.toggle("Approve/Activate SKUs", value=True)
     action_text = "Activate" if action else "Deactivate"
     approval_status = "approved" if action else "unapproved"
+
+    if action:
+        st.markdown(
+            """
+            <style>
+            body { background-color: white; color: black; }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.markdown(
+            """
+            <style>
+            body { background-color: black; color: white; }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
 
     # Update switch title dynamically
     st.title("Approve/Activate SKUs" if action else "Unapprove/Deactivate SKUs")
@@ -100,9 +108,6 @@ if st.session_state.logged_in:
 
                     # Convert input SKUs into a list
                     user_pids = process_pids(pids_input)
-
-                    # Display a random motivational message while processing
-                    st.info(random.choice(motivational_phrases))
 
                     # Filter dataset for provided SKUs
                     df_selected = df_filtered[df_filtered['PID'].isin(user_pids)]
