@@ -24,29 +24,24 @@ if not st.session_state.logged_in:
 
 # If logged in, show the main app
 if st.session_state.logged_in:
-    # Apply theme based on action
+    # Approval/Inactivation switch
     action = st.toggle("Approve/Activate SKUs", value=True)
     action_text = "Activate" if action else "Deactivate"
     approval_status = "approved" if action else "unapproved"
-
-    if action:
-        st.markdown(
-            """
-            <style>
-            body { background-color: white; color: black; }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-    else:
-        st.markdown(
-            """
-            <style>
-            body { background-color: black; color: white; }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
+    theme_mode = "light" if action else "dark"
+    
+    # Apply theme dynamically
+    st.markdown(
+        f"""
+        <style>
+        html, body, [class*="st-"] {{
+            background-color: {'#FFFFFF' if action else '#000000'};
+            color: {'#000000' if action else '#FFFFFF'};
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
     # Update switch title dynamically
     st.title("Approve/Activate SKUs" if action else "Unapprove/Deactivate SKUs")
